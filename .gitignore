@@ -1,27 +1,32 @@
-# Node.js dependencies
+# Node.js
 node_modules/
 npm-debug.log
 yarn-error.log
+package-lock.json
 
-# Logs
-logs/
-*.log
-
-# OS generated files
-.DS_Store
-Thumbs.db
-
-# Build directories
-dist/
-build/
-
-# IDE specific files
+# Editor/IDE
 .vscode/
 .idea/
+*.iml
+.DS_Store
 
-# Environment variables
-.env
+# Electron Forge & Webpack
+out/
+dist/
+.temp/
+.cache/
+.webpack/
 
-# Miscellaneous
+# Build Artifacts
+*.asar
+*.log
+*.tgz
+*.gz
+*.zip
+
+# OS Files
+Thumbs.db
 *.swp
-*.swo
+
+# TypeScript
+*.tsbuildinfo
