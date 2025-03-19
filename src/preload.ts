@@ -2,10 +2,8 @@
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
 import { contextBridge, ipcRenderer } from 'electron';
 
-console.log('from preload.ts');
-
 const audioAPI = {
-    save: (buffer: ArrayBuffer) => ipcRenderer.invoke('save-audio', buffer),
+    save: (buffer: ArrayBuffer, owner: string) => ipcRenderer.invoke('save-audio', buffer, owner),
 }
 
-contextBridge.exposeInMainWorld('audioAPI', audioAPI);   
+contextBridge.exposeInMainWorld('audioAPI', audioAPI);
