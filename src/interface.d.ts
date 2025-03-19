@@ -1,5 +1,5 @@
 export interface IAudioAPI {
-    save: (buffer: ArrayBuffer) => Promise<string>,
+    save: (wavArrayBuffer: ArrayBuffer, owner: string) => Promise<{ success: boolean; record?: { filename: string, data: string, owner: string }, error?: string }>,
 }
 
 declare global {

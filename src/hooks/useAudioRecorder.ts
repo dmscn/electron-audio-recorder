@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { encodeWAV } from '../utils/audio';
 
 export function useAudioRecorder() {
   const [audio, setAudio] = useState<string | null>(null);
@@ -47,19 +48,27 @@ export function useAudioRecorder() {
   const save = async () => {
     if (recordedBlobRef.current) {
       try {
-        const buffer = await recordedBlobRef.current.arrayBuffer();
+        // Decode the WebM audio data into an AudioBuffer
+        const arrayBuffer = await recordedBlobRef.current.arrayBuffer();
+        const audioContext = new AudioContext();
+        const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
 
-        const savedFilePath: string = await window.audioAPI.save(buffer);
-        if (savedFilePath) {
-          const wavUrl = `file://${savedFilePath}`;
+        // Encode the AudioBuffer to a WAV ArrayBuffer with a sample rate of 16,000 Hz
+        const wavArrayBuffer = await encodeWAV(audioBuffer, 16000);
+
+        // Send the base64-encoded WAV data to the main process for storage
+        const { success, record: { data } } = await window.audioAPI.save(wavArrayBuffer, 'user');
+        if (success && data) {
+          const wavUrl = `data:audio/wav;base64,${data}`;
           setAudio(wavUrl);
           setIsSaved(true);
         }
       } catch (error) {
-        console.error('Error saving audio:', error);
+        console.error('Error processing audio:', error);
       }
     }
   };
+
 
   return { audio, isRecording, start, stop, save, isSaved };
 }
